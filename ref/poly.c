@@ -5,6 +5,7 @@
 #include "reduce.h"
 #include "rounding.h"
 #include "symmetric.h"
+#include "extra.h" //modified
 
 #ifdef DBENCH
 #include "test/cpucycles.h"
@@ -160,7 +161,8 @@ void poly_pointwise_montgomery(poly *c, const poly *a, const poly *b) {
   DBENCH_START();
 
   for(i = 0; i < N; ++i)
-    c->coeffs[i] = montgomery_reduce((int64_t)a->coeffs[i] * b->coeffs[i]);
+    //c->coeffs[i] = montgomery_reduce((int64_t)a->coeffs[i] * b->coeffs[i]);
+    c->coeffs[i] = montgomery_reduce(binary_mult(a->coeffs[i], b->coeffs[i]));//modified
 
   DBENCH_STOP(*tmul);
 }
@@ -357,7 +359,8 @@ void poly_uniform(poly *a,
   ctr = rej_uniform(a->coeffs, N, buf, buflen);
 
   while(ctr < N) {
-    off = buflen % 3;
+    //off = buflen % 3;
+    off=mod3_u32(buflen);//modified
     for(i = 0; i < off; ++i)
       buf[i] = buf[buflen - off + i];
 
@@ -397,11 +400,13 @@ static unsigned int rej_eta(int32_t *a,
 
 #if ETA == 2
     if(t0 < 15) {
-      t0 = t0 - (205*t0 >> 10)*5;
+      //t0 = t0 - (205*t0 >> 10)*5;
+      t0 = t0 - (mult_const_5(mult_const_205(t0) >> 10));//modified
       a[ctr++] = 2 - t0;
     }
     if(t1 < 15 && ctr < len) {
-      t1 = t1 - (205*t1 >> 10)*5;
+      //t1 = t1 - (205*t1 >> 10)*5;
+      t1 = t1 - (mult_const_5(mult_const_205(t1) >> 10));//modified
       a[ctr++] = 2 - t1;
     }
 #elif ETA == 4

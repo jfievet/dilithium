@@ -7,7 +7,7 @@ REM ---- Flags ----
 set CFLAGS=-Wall -Wextra -Wpedantic -Wmissing-prototypes -Wredundant-decls -Wshadow -Wvla -Wpointer-arith -O3 -fomit-frame-pointer
 
 REM ---- Sources ----
-set SOURCES=sign.c packing.c polyvec.c poly.c ntt.c reduce.c rounding.c
+set SOURCES=sign.c packing.c polyvec.c poly.c ntt.c reduce.c rounding.c extra.c
 set KECCAK_SOURCES=%SOURCES% fips202.c symmetric-shake.c
 
 %CC% %CFLAGS% -DDILITHIUM_MODE=3 ^

@@ -5,7 +5,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h> 
 #include "fips202.h"
+#include "extra.h" //modified
 
 #define NROUNDS 24
 #define ROL(a, offset) ((a << offset) ^ (a >> (64-offset)))
@@ -704,9 +706,22 @@ void shake128(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen)
 
   shake128_absorb_once(&state, in, inlen);
   nblocks = outlen/SHAKE128_RATE;
+
+  // Debug prints
+  // Only print when nblocks != 0
+  if (nblocks != 0) {
+    printf("DEBUG passed in shake128\n");
+    printf("DEBUG: nblocks: %lu\n", (unsigned long)nblocks);
+    printf("DEBUG: outlen (initial): %lu\n", (unsigned long)outlen);
+  }
+  
   shake128_squeezeblocks(out, nblocks, &state);
-  outlen -= nblocks*SHAKE128_RATE;
-  out += nblocks*SHAKE128_RATE;
+  //outlen -= nblocks*SHAKE128_RATE;
+  //out += nblocks*SHAKE128_RATE;
+
+  outlen -= mult_const_SHAKE128_RATE(nblocks); //modified
+  out += mult_const_SHAKE128_RATE(nblocks); //modified
+
   shake128_squeeze(out, outlen, &state);
 }
 
@@ -727,9 +742,22 @@ void shake256(uint8_t *out, size_t outlen, const uint8_t *in, size_t inlen)
 
   shake256_absorb_once(&state, in, inlen);
   nblocks = outlen/SHAKE256_RATE;
+
+  // Only print when nblocks != 0
+  if (nblocks != 0) {
+    printf("DEBUG passed in shake256\n");
+    printf("DEBUG: nblocks: %lu\n", (unsigned long)nblocks);
+    printf("DEBUG: outlen (initial): %lu\n", (unsigned long)outlen);
+    printf("DEBUG: SHAKE256_RATE: %lu\n", (unsigned long)SHAKE256_RATE);
+  }
+
   shake256_squeezeblocks(out, nblocks, &state);
-  outlen -= nblocks*SHAKE256_RATE;
-  out += nblocks*SHAKE256_RATE;
+  //outlen -= nblocks*SHAKE256_RATE;
+  //out += nblocks*SHAKE256_RATE;
+
+  outlen -= mult_const_SHAKE256_RATE(nblocks); //modified
+  out += mult_const_SHAKE256_RATE(nblocks); //modified
+
   shake256_squeeze(out, outlen, &state);
 }
 

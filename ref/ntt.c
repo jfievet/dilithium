@@ -2,6 +2,7 @@
 #include "params.h"
 #include "ntt.h"
 #include "reduce.h"
+#include "extra.h" //modified
 
 static const int32_t zetas[N] = {
          0,    25847, -2608894,  -518909,   237124,  -777960,  -876248,   466468,
@@ -55,7 +56,8 @@ void ntt(int32_t a[N]) {
     for(start = 0; start < N; start = j + len) {
       zeta = zetas[++k];
       for(j = start; j < start + len; ++j) {
-        t = montgomery_reduce((int64_t)zeta * a[j + len]);
+//        t = montgomery_reduce((int64_t)zeta * a[j + len]);
+        t = montgomery_reduce(binary_mult(zeta, a[j + len])); //modified
         a[j + len] = a[j] - t;
         a[j] = a[j] + t;
       }
@@ -87,12 +89,14 @@ void invntt_tomont(int32_t a[N]) {
         t = a[j];
         a[j] = t + a[j + len];
         a[j + len] = t - a[j + len];
-        a[j + len] = montgomery_reduce((int64_t)zeta * a[j + len]);
+        //a[j + len] = montgomery_reduce((int64_t)zeta * a[j + len]);
+        a[j + len] = montgomery_reduce(binary_mult(zeta, a[j + len]));//modified
       }
     }
   }
 
   for(j = 0; j < N; ++j) {
-    a[j] = montgomery_reduce((int64_t)f * a[j]);
+    //a[j] = montgomery_reduce((int64_t)f * a[j]);
+    a[j] = montgomery_reduce(binary_mult(f, a[j]));//modifed
   }
 }

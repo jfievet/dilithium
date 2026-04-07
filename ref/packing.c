@@ -2,6 +2,7 @@
 #include "packing.h"
 #include "polyvec.h"
 #include "poly.h"
+#include "extra.h"
 
 /*************************************************
 * Name:        pack_pk
@@ -23,7 +24,8 @@ void pack_pk(uint8_t pk[CRYPTO_PUBLICKEYBYTES],
   pk += SEEDBYTES;
 
   for(i = 0; i < K; ++i)
-    polyt1_pack(pk + i*POLYT1_PACKEDBYTES, &t1->vec[i]);
+    //polyt1_pack(pk + i*POLYT1_PACKEDBYTES, &t1->vec[i]);
+    polyt1_pack(pk + mult_const_POLYT1_PACKEDBYTES(i), &t1->vec[i]);//modifed
 }
 
 /*************************************************
@@ -46,7 +48,8 @@ void unpack_pk(uint8_t rho[SEEDBYTES],
   pk += SEEDBYTES;
 
   for(i = 0; i < K; ++i)
-    polyt1_unpack(&t1->vec[i], pk + i*POLYT1_PACKEDBYTES);
+    //polyt1_unpack(&t1->vec[i], pk + i*POLYT1_PACKEDBYTES);
+    polyt1_unpack(&t1->vec[i], pk + mult_const_POLYT1_PACKEDBYTES(i));
 }
 
 /*************************************************
@@ -85,15 +88,20 @@ void pack_sk(uint8_t sk[CRYPTO_SECRETKEYBYTES],
   sk += TRBYTES;
 
   for(i = 0; i < L; ++i)
-    polyeta_pack(sk + i*POLYETA_PACKEDBYTES, &s1->vec[i]);
-  sk += L*POLYETA_PACKEDBYTES;
+    //polyeta_pack(sk + i*POLYETA_PACKEDBYTES, &s1->vec[i]);
+    polyeta_pack(sk + mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,i), &s1->vec[i]); //modified
+  //sk += L*POLYETA_PACKEDBYTES;
+  sk += mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,L);//modified
 
   for(i = 0; i < K; ++i)
-    polyeta_pack(sk + i*POLYETA_PACKEDBYTES, &s2->vec[i]);
-  sk += K*POLYETA_PACKEDBYTES;
+    //polyeta_pack(sk + i*POLYETA_PACKEDBYTES, &s2->vec[i]);
+    polyeta_pack(sk + mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,i), &s2->vec[i]);//modifed
+  //sk += K*POLYETA_PACKEDBYTES;
+  sk += mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,K);//modified
 
   for(i = 0; i < K; ++i)
-    polyt0_pack(sk + i*POLYT0_PACKEDBYTES, &t0->vec[i]);
+    //polyt0_pack(sk + i*POLYT0_PACKEDBYTES, &t0->vec[i]);
+    polyt0_pack(sk + mult_const_POLYT0_PACKEDBYTES(i), &t0->vec[i]);//modified
 }
 
 /*************************************************
@@ -132,15 +140,20 @@ void unpack_sk(uint8_t rho[SEEDBYTES],
   sk += TRBYTES;
 
   for(i=0; i < L; ++i)
-    polyeta_unpack(&s1->vec[i], sk + i*POLYETA_PACKEDBYTES);
-  sk += L*POLYETA_PACKEDBYTES;
+    //polyeta_unpack(&s1->vec[i], sk + i*POLYETA_PACKEDBYTES);
+    polyeta_unpack(&s1->vec[i], sk + mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,i));//modified
+  //sk += L*POLYETA_PACKEDBYTES;
+  sk += mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,L);//modified
 
   for(i=0; i < K; ++i)
-    polyeta_unpack(&s2->vec[i], sk + i*POLYETA_PACKEDBYTES);
-  sk += K*POLYETA_PACKEDBYTES;
+    //polyeta_unpack(&s2->vec[i], sk + i*POLYETA_PACKEDBYTES);
+    polyeta_unpack(&s2->vec[i], sk + mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,i));//modified
+  //sk += K*POLYETA_PACKEDBYTES;
+  sk += mult_const_POLYETA_PACKEDBYTES(POLYETA_PACKEDBYTES,K);//modified
 
   for(i=0; i < K; ++i)
-    polyt0_unpack(&t0->vec[i], sk + i*POLYT0_PACKEDBYTES);
+    //polyt0_unpack(&t0->vec[i], sk + i*POLYT0_PACKEDBYTES);
+    polyt0_unpack(&t0->vec[i], sk + mult_const_POLYT0_PACKEDBYTES(i));//modified
 }
 
 /*************************************************
@@ -165,8 +178,10 @@ void pack_sig(uint8_t sig[CRYPTO_BYTES],
   sig += CTILDEBYTES;
 
   for(i = 0; i < L; ++i)
-    polyz_pack(sig + i*POLYZ_PACKEDBYTES, &z->vec[i]);
-  sig += L*POLYZ_PACKEDBYTES;
+    //polyz_pack(sig + i*POLYZ_PACKEDBYTES, &z->vec[i]);
+    polyz_pack(sig + mult_const_POLYZ_PACKEDBYTES(POLYZ_PACKEDBYTES,i), &z->vec[i]);//modified
+  //sig += L*POLYZ_PACKEDBYTES;
+  sig += mult_const_POLYZ_PACKEDBYTES(POLYZ_PACKEDBYTES,L);//modified
 
   /* Encode h */
   for(i = 0; i < OMEGA + K; ++i)
@@ -207,8 +222,10 @@ int unpack_sig(uint8_t c[CTILDEBYTES],
   sig += CTILDEBYTES;
 
   for(i = 0; i < L; ++i)
-    polyz_unpack(&z->vec[i], sig + i*POLYZ_PACKEDBYTES);
-  sig += L*POLYZ_PACKEDBYTES;
+    //polyz_unpack(&z->vec[i], sig + i*POLYZ_PACKEDBYTES);
+    polyz_unpack(&z->vec[i], sig + mult_const_POLYZ_PACKEDBYTES(POLYZ_PACKEDBYTES,i));//modified
+  //sig += L*POLYZ_PACKEDBYTES;
+  sig += mult_const_POLYZ_PACKEDBYTES(POLYZ_PACKEDBYTES,L);//modified
 
   /* Decode h */
   k = 0;
