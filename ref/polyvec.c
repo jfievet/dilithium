@@ -2,6 +2,7 @@
 #include "params.h"
 #include "polyvec.h"
 #include "poly.h"
+#include "extra.h"
 
 /*************************************************
 * Name:        expand_mat
@@ -385,5 +386,6 @@ void polyveck_pack_w1(uint8_t r[K*POLYW1_PACKEDBYTES], const polyveck *w1) {
   unsigned int i;
 
   for(i = 0; i < K; ++i)
-    polyw1_pack(&r[i*POLYW1_PACKEDBYTES], &w1->vec[i]);
+    //polyw1_pack(&r[i*POLYW1_PACKEDBYTES], &w1->vec[i]);
+    polyw1_pack(&r[mult_const_POLYW1_PACKEDBYTES(POLYW1_PACKEDBYTES,i)], &w1->vec[i]);
 }

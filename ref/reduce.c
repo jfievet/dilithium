@@ -1,6 +1,9 @@
 #include <stdint.h>
+#include <stdio.h>
+#include <inttypes.h>
 #include "params.h"
 #include "reduce.h"
+#include "extra.h"
 
 /*************************************************
 * Name:        montgomery_reduce
@@ -11,12 +14,14 @@
 * Arguments:   - int64_t: finite field element a
 *
 * Returns r.
-**************************************************/
+************************************************/
 int32_t montgomery_reduce(int64_t a) {
   int32_t t;
 
-  t = (int64_t)(int32_t)a*QINV;
-  t = (a - (int64_t)t*Q) >> 32;
+  //t = (int64_t)(int32_t)a*QINV;
+  t = mult_const_QINV((int32_t)a);//modified
+  //t = (a - (int64_t)t*Q) >> 32;
+  t = (a - mult_const_Q((int64_t)t)) >> 32;//modified
   return t;
 }
 
@@ -34,7 +39,8 @@ int32_t reduce32(int32_t a) {
   int32_t t;
 
   t = (a + (1 << 22)) >> 23;
-  t = a - t*Q;
+  //t = a - t*Q;
+  t = a - mult_const_Q((int64_t)t);//modified
   return t;
 }
 

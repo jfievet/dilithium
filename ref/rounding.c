@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "params.h"
 #include "rounding.h"
+#include "extra.h"
 
 /*************************************************
 * Name:        power2round
@@ -41,14 +42,17 @@ int32_t decompose(int32_t *a0, int32_t a) {
 
   a1  = (a + 127) >> 7;
 #if GAMMA2 == (Q-1)/32
-  a1  = (a1*1025 + (1 << 21)) >> 22;
+  //a1  = (a1*1025 + (1 << 21)) >> 22;
+  a1  = (mult_const_1025(a1) + (1 << 21)) >> 22;//modified
   a1 &= 15;
 #elif GAMMA2 == (Q-1)/88
-  a1  = (a1*11275 + (1 << 23)) >> 24;
+  //a1  = (a1*11275 + (1 << 23)) >> 24;
+  a1  = (mult_const_11275(a1) + (1 << 23)) >> 24;
   a1 ^= ((43 - a1) >> 31) & a1;
 #endif
 
-  *a0  = a - a1*2*GAMMA2;
+  //*a0  = a - a1*2*GAMMA2;
+  *a0  = a - mult_const_GAMMA2(GAMMA2,a1*2);//modified
   *a0 -= (((Q-1)/2 - *a0) >> 31) & Q;
   return a1;
 }
