@@ -7,7 +7,7 @@
 /*************** CONFIG ****************/
 #define USE_PRBS31        1
 #define PRBS31_INIT       0x7FFFFFFF  // Must be non-zero
-#define PRBS_DEBUG_FILE   1           // Enable PRBS logging
+#define PRBS_DEBUG_FILE   0           // Enable PRBS logging
 /****************************************/
 
 #if USE_PRBS31

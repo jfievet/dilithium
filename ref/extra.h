@@ -1,5 +1,7 @@
+#ifndef EXTRA_H
+#define EXTRA_H
 #include <stddef.h>
-
+#include <stdint.h>
 size_t mult_const_SHAKE128_RATE(size_t in);
 size_t mult_const_SHAKE256_RATE(size_t in);
 int64_t binary_mult(int32_t a, int32_t b);
@@ -16,3 +18,4 @@ int64_t mult_const_Q(int64_t in);
 uint32_t mult_const_1025(uint32_t in);
 uint32_t mult_const_11275(uint32_t in);
 int32_t mult_const_GAMMA2(int32_t param, int32_t in);
+#endif

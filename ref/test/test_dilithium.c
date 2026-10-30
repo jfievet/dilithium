@@ -6,11 +6,11 @@
 
 #define MLEN 59
 #define CTXLEN 14
-#define NTESTS 100
+#define NTESTS 2000
 
 /*************** CONFIG ****************/
-#define ENABLE_LOGGING 1
-#define PRBS_DEBUG_FILE 1
+#define ENABLE_LOGGING 0
+#define PRBS_DEBUG_FILE 0
 /****************************************/
 
 #if ENABLE_LOGGING
